@@ -28,6 +28,3 @@ jobs:
       run: |
         pip install pytest
         pytest
-    - name: Cache
-      uses: actions/cache@v1.0.0
-
