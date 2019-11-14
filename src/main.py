@@ -19,7 +19,7 @@ class Window(QWidget):
         self.show()
 
     def printVal(self):
-        QMessageBox.information(self, "About", self.le.text())
+        QMessageBox.information(self, 'About', self.le.text())
 
 
 if __name__ == '__main__':
