@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QMessageBox, QWidget
+from calc.models import SumFunction, NaturalNumberFunction
 
 
 class Window(QWidget):
@@ -9,7 +10,7 @@ class Window(QWidget):
 
     def setupUI(self):
         btn = QPushButton('push', self)
-        btn.clicked.connect(self.printVal)
+        btn.clicked.connect(self.showVal)
         self.lbl = QLabel(self)
         self.lbl.move(100, 40)
         self.le = QLineEdit('Wolla', self)
@@ -18,11 +19,17 @@ class Window(QWidget):
         self.setWindowTitle('Dit is skuu')
         self.show()
 
-    def printVal(self):
+    def showVal(self):
         QMessageBox.information(self, 'About', self.le.text())
 
 
 if __name__ == '__main__':
-    app = QApplication([])
-    w = Window()
-    sys.exit(app.exec_())
+    one = NaturalNumberFunction(1)
+    two = NaturalNumberFunction(2)
+    s = SumFunction(one, two)
+
+    print(s.toString())
+    print(s.evaluate(4))
+    # app = QApplication([])
+    # w = Window()
+    # sys.exit(app.exec_())
