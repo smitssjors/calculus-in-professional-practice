@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QMessageBox, QWidget
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit
 from functions import VariableFunction, NaturalNumberFunction, SumFunction, PiFunction
 
 
