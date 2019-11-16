@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit
-from functions import VariableFunction, NaturalNumberFunction, SumFunction, PiFunction
+from functions import *
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Window(QWidget):
@@ -25,11 +27,13 @@ class Window(QWidget):
 if __name__ == '__main__':
     one = VariableFunction()
     two = NaturalNumberFunction(2)
-    s = SumFunction(one, two)
-    pif = PiFunction()
-    print(pif.toString())
-    print(s.toString())
-    print(s.evaluate(4))
+    tree = VariableFunction()
+    p = PiFunction()
+    x = np.arange(-5., 5., 0.2)
+    # print(x.shape)
+    y = p.evaluate(x)
+    plt.plot(x, y, 'r')
+    plt.show()
     # app = QApplication([])
     # w = Window()
     # sys.exit(app.exec_())

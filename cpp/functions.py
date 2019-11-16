@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import math
+import numpy as np
 
 
 class BaseFunction(ABC):
@@ -14,24 +14,24 @@ class BaseFunction(ABC):
 
 class NaturalNumberFunction(BaseFunction):
     def __init__(self, num):
-        self.number = int(num)
+        self.number = np.int(num)
 
     def toString(self):
         return f'{self.number}'
 
     def evaluate(self, num):
-        return self.number
+        return np.full_like(num, self.number)
 
 
 class RealNumberFunction(BaseFunction):
     def __init__(self, num):
-        self.number = float(num)
+        self.number = np.float(num)
 
     def toString(self):
         return f'{self.number}'
 
     def evaluate(self, num):
-        return self.number
+        return np.full_like(num, self.number)
 
 
 class PiFunction(BaseFunction):
@@ -39,7 +39,7 @@ class PiFunction(BaseFunction):
         return '\u03C0'
 
     def evaluate(self, num):
-        return math.pi
+        return np.full_like(num, np.pi)
 
 
 class VariableFunction(BaseFunction):
@@ -107,7 +107,7 @@ class PowerFunction(BaseFunction):
         return f'({self.firstFunction.toString()} ^ {self.secondFunction.toString()})'
 
     def evaluate(self, num):
-        return math.pow(self.firstFunction.evaluate(num), int(self.secondFunction.evaluate(num)))
+        return self.firstFunction.evaluate(num) ** self.secondFunction.evaluate(num)
 
 
 class SineFunction(BaseFunction):
@@ -118,7 +118,7 @@ class SineFunction(BaseFunction):
         return f'sin({self.function.toString()})'
 
     def evaluate(self, num):
-        return math.sin(self.function.evaluate(num))
+        return np.sin(self.function.evaluate(num))
 
 
 class CosineFunction(BaseFunction):
@@ -129,7 +129,7 @@ class CosineFunction(BaseFunction):
         return f'cos({self.function.toString()})'
 
     def evaluate(self, num):
-        return math.cos(self.function.evaluate(num))
+        return np.cos(self.function.evaluate(num))
 
 
 class ExponentFunction(BaseFunction):
@@ -140,7 +140,7 @@ class ExponentFunction(BaseFunction):
         return f'(e ^ {self.function.toString()})'
 
     def evaluate(self, num):
-        return math.exp(self.function.evaluate(num))
+        return np.exp(self.function.evaluate(num))
 
 
 class NaturalLogFunction(BaseFunction):
@@ -151,7 +151,7 @@ class NaturalLogFunction(BaseFunction):
         return f'ln({self.function.toString()})'
 
     def evaluate(self, num):
-        return math.log(self.function.evaluate(num))
+        return np.log(self.function.evaluate(num))
 
 
 class FactorialFunction(BaseFunction):
@@ -162,4 +162,4 @@ class FactorialFunction(BaseFunction):
         return f'{self.function.toString()}!'
 
     def evaluate(self, num):
-        return math.factorial(self.function.evaluate(num))
+        return np.factorial(self.function.evaluate(num))
