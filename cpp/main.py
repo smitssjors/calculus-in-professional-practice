@@ -1,6 +1,5 @@
-import sys
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QMessageBox, QWidget
-from calc.models import SumFunction, NaturalNumberFunction
+from calc.models.functions import VariableFunction, NaturalNumberFunction, SumFunction
 
 
 class Window(QWidget):
@@ -24,7 +23,7 @@ class Window(QWidget):
 
 
 if __name__ == '__main__':
-    one = NaturalNumberFunction(1)
+    one = VariableFunction()
     two = NaturalNumberFunction(2)
     s = SumFunction(one, two)
 
