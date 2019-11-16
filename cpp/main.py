@@ -25,12 +25,10 @@ class Window(QWidget):
 
 
 if __name__ == '__main__':
-    one = VariableFunction()
-    two = NaturalNumberFunction(2)
-    tree = VariableFunction()
-    p = PiFunction()
+    big = VariableFunction()
+    small = NaturalNumberFunction(2)
+    p = FactorialFunction(big)
     x = np.arange(-5., 5., 0.2)
-    # print(x.shape)
     y = p.evaluate(x)
     plt.plot(x, y, 'r')
     plt.show()

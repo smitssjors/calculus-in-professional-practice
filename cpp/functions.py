@@ -162,4 +162,10 @@ class FactorialFunction(BaseFunction):
         return f'{self.function.toString()}!'
 
     def evaluate(self, num):
-        return np.factorial(self.function.evaluate(num))
+        temp = []
+        for x in num:
+            if x >= 0 & x.is_integer():
+                temp.append(np.math.factorial(self.function.evaluate(int(x))))
+            else:
+                temp.append(np.nan)
+        return np.array(temp)
