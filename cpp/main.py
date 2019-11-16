@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QMessageBox, QWidget
-from calc.models.functions import VariableFunction, NaturalNumberFunction, SumFunction
+from functions import VariableFunction, NaturalNumberFunction, SumFunction, PiFunction
 
 
 class Window(QWidget):
@@ -26,7 +26,8 @@ if __name__ == '__main__':
     one = VariableFunction()
     two = NaturalNumberFunction(2)
     s = SumFunction(one, two)
-
+    pif = PiFunction()
+    print(pif.toString())
     print(s.toString())
     print(s.evaluate(4))
     # app = QApplication([])
