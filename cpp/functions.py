@@ -11,6 +11,10 @@ class BaseFunction(ABC):
     def evaluate(self, num):
         pass
 
+    @abstractmethod
+    def __str__(self):
+        return self.toString()
+
 
 class NaturalNumberFunction(BaseFunction):
     def __init__(self, num):
@@ -21,6 +25,9 @@ class NaturalNumberFunction(BaseFunction):
 
     def evaluate(self, num):
         return np.full_like(num, self.number)
+
+    def __str__(self):
+        return self.toString()
 
 
 class RealNumberFunction(BaseFunction):
@@ -33,6 +40,9 @@ class RealNumberFunction(BaseFunction):
     def evaluate(self, num):
         return np.full_like(num, self.number)
 
+    def __str__(self):
+        return self.toString()
+
 
 class PiFunction(BaseFunction):
     def toString(self):
@@ -41,6 +51,9 @@ class PiFunction(BaseFunction):
     def evaluate(self, num):
         return np.full_like(num, np.pi)
 
+    def __str__(self):
+        return self.toString()
+
 
 class VariableFunction(BaseFunction):
     def toString(self):
@@ -48,6 +61,9 @@ class VariableFunction(BaseFunction):
 
     def evaluate(self, num):
         return num
+
+    def __str__(self):
+        return self.toString()
 
 
 class SumFunction(BaseFunction):
@@ -61,6 +77,9 @@ class SumFunction(BaseFunction):
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) + self.secondFunction.evaluate(num)
 
+    def __str__(self):
+        return self.toString()
+
 
 class DifferenceFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -72,6 +91,9 @@ class DifferenceFunction(BaseFunction):
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) - self.secondFunction.evaluate(num)
+
+    def __str__(self):
+        return self.toString()
 
 
 class ProductFunction(BaseFunction):
@@ -85,6 +107,9 @@ class ProductFunction(BaseFunction):
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) * self.secondFunction.evaluate(num)
 
+    def __str__(self):
+        return self.toString()
+
 
 class QuotientFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -96,6 +121,9 @@ class QuotientFunction(BaseFunction):
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) / self.secondFunction.evaluate(num)
+
+    def __str__(self):
+        return self.toString()
 
 
 class PowerFunction(BaseFunction):
@@ -109,6 +137,9 @@ class PowerFunction(BaseFunction):
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) ** self.secondFunction.evaluate(num)
 
+    def __str__(self):
+        return self.toString()
+
 
 class SineFunction(BaseFunction):
     def __init__(self, fun):
@@ -119,6 +150,9 @@ class SineFunction(BaseFunction):
 
     def evaluate(self, num):
         return np.sin(self.function.evaluate(num))
+
+    def __str__(self):
+        return self.toString()
 
 
 class CosineFunction(BaseFunction):
@@ -131,6 +165,9 @@ class CosineFunction(BaseFunction):
     def evaluate(self, num):
         return np.cos(self.function.evaluate(num))
 
+    def __str__(self):
+        return self.toString()
+
 
 class ExponentFunction(BaseFunction):
     def __init__(self, fun):
@@ -141,6 +178,9 @@ class ExponentFunction(BaseFunction):
 
     def evaluate(self, num):
         return np.exp(self.function.evaluate(num))
+
+    def __str__(self):
+        return self.toString()
 
 
 class NaturalLogFunction(BaseFunction):
@@ -153,6 +193,9 @@ class NaturalLogFunction(BaseFunction):
     def evaluate(self, num):
         return np.log(self.function.evaluate(num))
 
+    def __str__(self):
+        return self.toString()
+
 
 class FactorialFunction(BaseFunction):
     def __init__(self, fun):
@@ -162,6 +205,9 @@ class FactorialFunction(BaseFunction):
         return f'{self.function.toString()}!'
 
     def evaluate(self, num):
+        if isinstance(num, int):
+            return np.math.factorial(self.function.evaluate(num))
+
         temp = []
         for x in num:
             if x >= 0 & x.is_integer():
@@ -169,3 +215,6 @@ class FactorialFunction(BaseFunction):
             else:
                 temp.append(np.nan)
         return np.array(temp)
+
+    def __str__(self):
+        return self.toString()
