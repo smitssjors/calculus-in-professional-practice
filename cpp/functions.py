@@ -205,12 +205,12 @@ class FactorialFunction(BaseFunction):
         return f'{self.function.toString()}!'
 
     def evaluate(self, num):
-        if isinstance(num, int):
+        if isinstance(num, int) or isinstance(num, float):
             return np.math.factorial(self.function.evaluate(num))
 
         temp = []
         for x in num:
-            if x >= 0 & x.is_integer():
+            if x >= 0 and x.is_integer():
                 temp.append(np.math.factorial(self.function.evaluate(int(x))))
             else:
                 temp.append(np.nan)
