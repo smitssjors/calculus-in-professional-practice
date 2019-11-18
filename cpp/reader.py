@@ -9,10 +9,7 @@ def read(formula):
     return func
 
 
-def _read(formula=''):
-
-    firstchar = ''
-
+def _read(formula):
     firstchar, formula = getfirstchar(formula)
 
     # No switches in Python :(
