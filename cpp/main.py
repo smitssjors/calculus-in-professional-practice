@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit
 from functions import *
 import numpy as np
 import matplotlib.pyplot as plt
+import reader
 
 
 class Window(QWidget):
@@ -25,12 +26,15 @@ class Window(QWidget):
 
 
 if __name__ == '__main__':
-    big = VariableFunction()
-    small = NaturalNumberFunction(2)
-    p = FactorialFunction(big)
-    x = np.arange(-5., 5., 0.2)
-    y = p.evaluate(x)
-    plt.plot(x, y, 'r')
+    f = reader.read('s(x)')
+    print(f, f.evaluate(2.))
+
+    # big = VariableFunction()
+    # small = NaturalNumberFunction(2)
+    # p = SineFunction(ProductFunction(PiFunction(), VariableFunction()))
+    x = np.arange(-5., 5., 0.01)
+    y = f.evaluate(x)
+    plt.plot(x, y, .5)
     plt.show()
     # app = QApplication([])
     # w = Window()
