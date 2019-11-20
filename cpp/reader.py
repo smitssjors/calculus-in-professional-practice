@@ -1,4 +1,4 @@
-from functions import *
+from . import functions
 
 
 def read(formula):
@@ -15,72 +15,72 @@ def _read(formula):
     # No switches in Python :(
     if firstchar == 'x':
         before, formula = readuntil(formula, ',', ')')
-        return VariableFunction(), formula
+        return functions.VariableFunction(), formula
     elif firstchar.isnumeric():
         before, formula = readuntil(formula, ',', ')')
         num = firstchar + before
         if '.' in num:
-            return RealNumberFunction(num), formula
-        return NaturalNumberFunction(num), formula
+            return functions.RealNumberFunction(num), formula
+        return functions.NaturalNumberFunction(num), formula
     elif firstchar == 'n':
         num, formula = readuntil(formula[1:], ')', '.')
-        return NaturalNumberFunction(num), formula
+        return functions.NaturalNumberFunction(num), formula
     elif firstchar == 'r':
         num, formula = readuntil(formula[1:], ')')
-        return RealNumberFunction(num), formula
+        return functions.RealNumberFunction(num), formula
     elif firstchar == 'p':
         before, formula = readuntil(formula, ',', ')')
-        return PiFunction(), formula
+        return functions.PiFunction(), formula
     elif firstchar == '+':
         _, formula = readuntil(formula, '(')
         firstFunc, formula = _read(formula[1:])
         before, formula = readuntil(formula, ',')
         secondFunc, formula = _read(formula[1:])
-        return SumFunction(firstFunc, secondFunc), formula
+        return functions.SumFunction(firstFunc, secondFunc), formula
     elif firstchar == '-':
         _, formula = readuntil(formula, '(')
         firstFunc, formula = _read(formula[1:])
         before, formula = readuntil(formula, ',')
         secondFunc, formula = _read(formula[1:])
-        return DifferenceFunction(firstFunc, secondFunc), formula
+        return functions.DifferenceFunction(firstFunc, secondFunc), formula
     elif firstchar == '*':
         _, formula = readuntil(formula, '(')
         firstFunc, formula = _read(formula[1:])
         before, formula = readuntil(formula, ',')
         secondFunc, formula = _read(formula[1:])
-        return ProductFunction(firstFunc, secondFunc), formula
+        return functions.ProductFunction(firstFunc, secondFunc), formula
     elif firstchar == '/':
         _, formula = readuntil(formula, '(')
         firstFunc, formula = _read(formula[1:])
         before, formula = readuntil(formula, ',')
         secondFunc, formula = _read(formula[1:])
-        return QuotientFunction(firstFunc, secondFunc), formula
+        return functions.QuotientFunction(firstFunc, secondFunc), formula
     elif firstchar == '^':
         _, formula = readuntil(formula, '(')
         firstFunc, formula = _read(formula[1:])
         before, formula = readuntil(formula, ',')
         secondFunc, formula = _read(formula[1:])
-        return PowerFunction(firstFunc, secondFunc), formula
+        return functions.PowerFunction(firstFunc, secondFunc), formula
     elif firstchar == 's':
         _, formula = readuntil(formula, '(')
         func, formula = _read(formula[1:])
-        return SineFunction(func), formula
+        return functions.SineFunction(func), formula
     elif firstchar == 'c':
         _, formula = readuntil(formula, '(')
         func, formula = _read(formula[1:])
-        return CosineFunction(func), formula
+        return functions.CosineFunction(func), formula
     elif firstchar == 'e':
         _, formula = readuntil(formula, '(')
         func, formula = _read(formula[1:])
-        return ExponentFunction(func), formula
+        return functions.ExponentFunction(func), formula
     elif firstchar == 'l':
         _, formula = readuntil(formula, '(')
         func, formula = _read(formula[1:])
-        return NaturalLogFunction(func), formula
+        return functions.NaturalLogFunction(func), formula
     elif firstchar == '!':
         _, formula = readuntil(formula, '(')
         func, formula = _read(formula[1:])
-        return FactorialFunction(func), formula
+        return functions.FactorialFunction(func), formula
 
 
 def getfirstchar(f):
@@ -95,4 +95,4 @@ def readuntil(f, *until):
             if x == y:
                 return f[:i], f[i:]
 
-    return f
+    return f, f

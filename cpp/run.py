@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit
-from functions import *
 import numpy as np
 import matplotlib.pyplot as plt
-import reader
+import cpp.reader as reader
+import cpp.functions as functions
+# from . import reader
+# from . import functions
 
 
 class Window(QWidget):
@@ -26,8 +28,9 @@ class Window(QWidget):
 
 
 if __name__ == '__main__':
-    f = reader.read('s(x)')
+    f = reader.read('/(s(*(p,x)),+(x,5))')
     print(f, f.evaluate(2.))
+    f.creategraph()
 
     # big = VariableFunction()
     # small = NaturalNumberFunction(2)

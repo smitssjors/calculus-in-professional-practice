@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import numpy as np
+import graphviz as gv
 
 
 class BaseFunction(ABC):
@@ -15,6 +16,14 @@ class BaseFunction(ABC):
     def __str__(self):
         return self.toString()
 
+    @abstractmethod
+    def creategraph(self):
+        pass
+
+    @abstractmethod
+    def tograph(self, index, dot):
+        pass
+
 
 class NaturalNumberFunction(BaseFunction):
     def __init__(self, num):
@@ -28,6 +37,17 @@ class NaturalNumberFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        dot.node(str(index), str(self.number))
+        index += 1
+        return index, dot
 
 
 class RealNumberFunction(BaseFunction):
@@ -43,6 +63,17 @@ class RealNumberFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        dot.node(str(index), str(self.number))
+        index += 1
+        return index, dot
+
 
 class PiFunction(BaseFunction):
     def toString(self):
@@ -54,6 +85,17 @@ class PiFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        dot.node(str(index), '\u03C0')
+        index += 1
+        return index, dot
+
 
 class VariableFunction(BaseFunction):
     def toString(self):
@@ -64,6 +106,17 @@ class VariableFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        dot.node(str(index), 'x')
+        index += 1
+        return index, dot
 
 
 class SumFunction(BaseFunction):
@@ -80,6 +133,22 @@ class SumFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), '+')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.firstFunction.tograph(index, dot)
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.secondFunction.tograph(index, dot)
+        return index, dot
+
 
 class DifferenceFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -94,6 +163,23 @@ class DifferenceFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), '-')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.firstFunction.tograph(index, dot)
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.secondFunction.tograph(index, dot)
+        return index, dot
 
 
 class ProductFunction(BaseFunction):
@@ -110,6 +196,23 @@ class ProductFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), '*')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.firstFunction.tograph(index, dot)
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.secondFunction.tograph(index, dot)
+        return index, dot
+
 
 class QuotientFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -124,6 +227,23 @@ class QuotientFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), '/')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.firstFunction.tograph(index, dot)
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.secondFunction.tograph(index, dot)
+        return index, dot
 
 
 class PowerFunction(BaseFunction):
@@ -140,6 +260,23 @@ class PowerFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), '^')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.firstFunction.tograph(index, dot)
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.secondFunction.tograph(index, dot)
+        return index, dot
+
 
 class SineFunction(BaseFunction):
     def __init__(self, fun):
@@ -153,6 +290,21 @@ class SineFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), 'sin')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.function.tograph(index, dot)
+        return index, dot
 
 
 class CosineFunction(BaseFunction):
@@ -168,6 +320,21 @@ class CosineFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), 'cos')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.function.tograph(index, dot)
+        return index, dot
+
 
 class ExponentFunction(BaseFunction):
     def __init__(self, fun):
@@ -182,6 +349,21 @@ class ExponentFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), 'e^')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.function.tograph(index, dot)
+        return index, dot
+
 
 class NaturalLogFunction(BaseFunction):
     def __init__(self, fun):
@@ -195,6 +377,21 @@ class NaturalLogFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), 'ln')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.function.tograph(index, dot)
+        return index, dot
 
 
 class FactorialFunction(BaseFunction):
@@ -218,3 +415,18 @@ class FactorialFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def creategraph(self):
+        dot = gv.Graph(name='calc')
+        index, dot = self.tograph(1, dot)
+        print(dot.source)
+        dot.render('calc.dot')
+        return 'graph.png'
+
+    def tograph(self, index, dot):
+        tempindex = index
+        dot.node(str(index), '!')
+        index += 1
+        dot.edge(str(tempindex), str(index))
+        index, dot = self.function.tograph(index, dot)
+        return index, dot
