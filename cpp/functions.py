@@ -17,11 +17,19 @@ class BaseFunction(ABC):
         return self.toString()
 
     @abstractmethod
+    def copy(self):
+        pass
+
+    @abstractmethod
     def creategraph(self):
         pass
 
     @abstractmethod
     def tograph(self, index, dot):
+        pass
+
+    @abstractmethod
+    def analytical_derrivite(self):
         pass
 
 
@@ -38,6 +46,9 @@ class NaturalNumberFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return NaturalNumberFunction(self.number)
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
@@ -48,6 +59,9 @@ class NaturalNumberFunction(BaseFunction):
         dot.node(str(index), str(self.number))
         index += 1
         return index, dot
+
+    def analytical_derrivite(self):
+        return NaturalNumberFunction(0)
 
 
 class RealNumberFunction(BaseFunction):
@@ -63,6 +77,9 @@ class RealNumberFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return RealNumberFunction(self.number)
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
@@ -73,6 +90,9 @@ class RealNumberFunction(BaseFunction):
         dot.node(str(index), str(self.number))
         index += 1
         return index, dot
+
+    def analytical_derrivite(self):
+        return RealNumberFunction(0)
 
 
 class PiFunction(BaseFunction):
@@ -85,6 +105,9 @@ class PiFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return PiFunction()
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
@@ -95,6 +118,9 @@ class PiFunction(BaseFunction):
         dot.node(str(index), '\u03C0')
         index += 1
         return index, dot
+
+    def analytical_derrivite(self):
+        return RealNumberFunction(0)
 
 
 class VariableFunction(BaseFunction):
@@ -107,6 +133,9 @@ class VariableFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return VariableFunction()
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
@@ -117,6 +146,9 @@ class VariableFunction(BaseFunction):
         dot.node(str(index), 'x')
         index += 1
         return index, dot
+
+    def analytical_derrivite(self):
+        return NaturalNumberFunction(1)
 
 
 class SumFunction(BaseFunction):
@@ -132,6 +164,9 @@ class SumFunction(BaseFunction):
 
     def __str__(self):
         return self.toString()
+
+    def copy(self):
+        return SumFunction(self.firstFunction.copy(), self.secondFunction.copy())
 
     def creategraph(self):
         dot = gv.Graph(name='calc')
@@ -149,6 +184,9 @@ class SumFunction(BaseFunction):
         index, dot = self.secondFunction.tograph(index, dot)
         return index, dot
 
+    def analytical_derrivite(self):
+        return SumFunction(self.firstFunction.analytical_derrivite(), self.secondFunction.analytical_derrivite())
+
 
 class DifferenceFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -164,10 +202,12 @@ class DifferenceFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return DifferenceFunction(self.firstFunction.copy(), self.secondFunction.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -180,6 +220,9 @@ class DifferenceFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.secondFunction.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return DifferenceFunction(self.firstFunction.analytical_derrivite(), self.secondFunction.analytical_derrivite())
 
 
 class ProductFunction(BaseFunction):
@@ -196,10 +239,12 @@ class ProductFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return ProductFunction(self.firstFunction.copy(), self.secondFunction.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -212,6 +257,15 @@ class ProductFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.secondFunction.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return SumFunction(
+            ProductFunction(
+                self.firstFunction.analytical_derrivite(),
+                self.secondFunction.copy()),
+            ProductFunction(
+                self.firstFunction.copy(),
+                self.secondFunction.analytical_derrivite()))
 
 
 class QuotientFunction(BaseFunction):
@@ -228,10 +282,12 @@ class QuotientFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return QuotientFunction(self.firstFunction.copy(), self.secondFunction.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -245,10 +301,31 @@ class QuotientFunction(BaseFunction):
         index, dot = self.secondFunction.tograph(index, dot)
         return index, dot
 
+    def analytical_derrivite(self):
+        return QuotientFunction(
+            DifferenceFunction(
+                ProductFunction(
+                    self.firstFunction.analytical_derrivite(),
+                    self.secondFunction.copy()
+                ),
+                ProductFunction(
+                    self.firstFunction.copy(),
+                    self.secondFunction.analytical_derrivite()
+                )
+            ),
+            PowerFunction(
+                self.secondFunction.copy(),
+                NaturalNumberFunction(2)
+            )
+        )
+
 
 class PowerFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
         self.firstFunction = firstFun
+
+        if not isinstance(secondFun, NaturalNumberFunction):
+            raise Exception('secondfunc must be a natural number')
         self.secondFunction = secondFun
 
     def toString(self):
@@ -260,10 +337,12 @@ class PowerFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return PowerFunction(self.firstFunction.copy(), self.secondFunction.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -276,6 +355,21 @@ class PowerFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.secondFunction.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return ProductFunction(
+            ProductFunction(
+                self.secondFunction.copy(),
+                PowerFunction(
+                    self.firstFunction.copy(),
+                    DifferenceFunction(
+                        self.secondFunction.copy(),
+                        NaturalNumberFunction(1)
+                    )
+                )
+            ),
+            self.firstFunction.analytical_derrivite()
+        )
 
 
 class SineFunction(BaseFunction):
@@ -291,10 +385,12 @@ class SineFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return SineFunction(self.function.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -305,6 +401,14 @@ class SineFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.function.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return ProductFunction(
+            CosineFunction(
+                self.function.copy()
+            ),
+            self.function.analytical_derrivite()
+        )
 
 
 class CosineFunction(BaseFunction):
@@ -320,10 +424,12 @@ class CosineFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return CosineFunction(self.function.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -334,6 +440,15 @@ class CosineFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.function.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return ProductFunction(
+            DifferenceFunction(
+                NaturalNumberFunction(0),
+                SineFunction(self.function.copy())
+            ),
+            self.function.analytical_derrivite()
+        )
 
 
 class ExponentFunction(BaseFunction):
@@ -349,10 +464,12 @@ class ExponentFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return ExponentFunction(self.function.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -363,6 +480,12 @@ class ExponentFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.function.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return ProductFunction(
+            self.copy(),
+            self.function.analytical_derrivite()
+        )
 
 
 class NaturalLogFunction(BaseFunction):
@@ -378,10 +501,12 @@ class NaturalLogFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return NaturalLogFunction(self.function.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 
@@ -392,6 +517,15 @@ class NaturalLogFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.function.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        return ProductFunction(
+            QuotientFunction(
+                NaturalNumberFunction(1),
+                self.function.copy()
+            ),
+            self.function.analytical_derrivite()
+        )
 
 
 class FactorialFunction(BaseFunction):
@@ -416,10 +550,12 @@ class FactorialFunction(BaseFunction):
     def __str__(self):
         return self.toString()
 
+    def copy(self):
+        return FactorialFunction(self.function.copy())
+
     def creategraph(self):
         dot = gv.Graph(name='calc')
         index, dot = self.tograph(1, dot)
-        print(dot.source)
         dot.render('calc.dot')
         return 'graph.png'
 

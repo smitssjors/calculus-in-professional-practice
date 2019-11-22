@@ -1,4 +1,4 @@
-from . import functions
+import functions
 
 
 def read(formula):

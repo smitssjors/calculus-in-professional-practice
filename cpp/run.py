@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit, QApplication
 import numpy as np
+import sys
 import matplotlib.pyplot as plt
-import cpp.reader as reader
-import cpp.functions as functions
+import reader
+import functions
 # from . import reader
 # from . import functions
 
@@ -30,15 +31,16 @@ class Window(QWidget):
 if __name__ == '__main__':
     f = reader.read('/(s(*(p,x)),+(x,5))')
     print(f, f.evaluate(2.))
-    f.creategraph()
+    # f.creategraph()
+    d = f.analytical_derrivite()
+    print(d)
+    d.creategraph()
 
-    # big = VariableFunction()
-    # small = NaturalNumberFunction(2)
-    # p = SineFunction(ProductFunction(PiFunction(), VariableFunction()))
     x = np.arange(-5., 5., 0.01)
+    p = d.evaluate(x)
     y = f.evaluate(x)
-    plt.plot(x, y, .5)
+    plt.plot(x, y, 'r', x, p, 'b')
     plt.show()
-    # app = QApplication([])
-    # w = Window()
-    # sys.exit(app.exec_())
+    app = QApplication([])
+    w = Window()
+    sys.exit(app.exec_())
