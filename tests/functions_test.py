@@ -137,7 +137,7 @@ class TestPowerFunction:
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
-        two = RealNumberFunction(2)
+        two = NaturalNumberFunction(2)
         n = PowerFunction(one, two)
         assert n.evaluate(5) == 1 ** 2
 

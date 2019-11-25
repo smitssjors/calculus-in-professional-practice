@@ -32,6 +32,14 @@ class BaseFunction(ABC):
     def analytical_derrivite(self):
         pass
 
+    @abstractmethod
+    def newton_derrivitive(self, x, h=0.001):
+        pass
+
+    @abstractmethod
+    def simplify(self):
+        pass
+
 
 class NaturalNumberFunction(BaseFunction):
     def __init__(self, num):
@@ -62,6 +70,12 @@ class NaturalNumberFunction(BaseFunction):
 
     def analytical_derrivite(self):
         return NaturalNumberFunction(0)
+
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        return self.copy()
 
 
 class RealNumberFunction(BaseFunction):
@@ -94,6 +108,12 @@ class RealNumberFunction(BaseFunction):
     def analytical_derrivite(self):
         return RealNumberFunction(0)
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        return self.copy()
+
 
 class PiFunction(BaseFunction):
     def toString(self):
@@ -122,6 +142,12 @@ class PiFunction(BaseFunction):
     def analytical_derrivite(self):
         return RealNumberFunction(0)
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        return self.copy()
+
 
 class VariableFunction(BaseFunction):
     def toString(self):
@@ -149,6 +175,12 @@ class VariableFunction(BaseFunction):
 
     def analytical_derrivite(self):
         return NaturalNumberFunction(1)
+
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        return self.copy()
 
 
 class SumFunction(BaseFunction):
@@ -187,6 +219,21 @@ class SumFunction(BaseFunction):
     def analytical_derrivite(self):
         return SumFunction(self.firstFunction.analytical_derrivite(), self.secondFunction.analytical_derrivite())
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_first_func = self.firstFunction.simplify()
+        simplified_second_func = self.secondFunction.simplify()
+
+        if are_numbers(simplified_first_func, simplified_second_func):
+            return RealNumberFunction(simplified_first_func.number + simplified_second_func.number)
+        if has_num(simplified_first_func, 0):
+            return simplified_second_func
+        if has_num(simplified_second_func, 0):
+            return simplified_first_func
+        return SumFunction(simplified_first_func, simplified_second_func)
+
 
 class DifferenceFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -222,7 +269,22 @@ class DifferenceFunction(BaseFunction):
         return index, dot
 
     def analytical_derrivite(self):
-        return DifferenceFunction(self.firstFunction.analytical_derrivite(), self.secondFunction.analytical_derrivite())
+        return DifferenceFunction(
+            self.firstFunction.analytical_derrivite(),
+            self.secondFunction.analytical_derrivite()
+        )
+
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_first_func = self.firstFunction.simplify()
+        simplified_second_func = self.secondFunction.simplify()
+
+        if are_numbers(simplified_first_func, simplified_second_func):
+            return RealNumberFunction(simplified_first_func.number - simplified_second_func.number)
+        
+        return DifferenceFunction(simplified_first_func, simplified_second_func)
 
 
 class ProductFunction(BaseFunction):
@@ -262,10 +324,30 @@ class ProductFunction(BaseFunction):
         return SumFunction(
             ProductFunction(
                 self.firstFunction.analytical_derrivite(),
-                self.secondFunction.copy()),
+                self.secondFunction.copy()
+            ),
             ProductFunction(
                 self.firstFunction.copy(),
-                self.secondFunction.analytical_derrivite()))
+                self.secondFunction.analytical_derrivite()
+            )
+        )
+
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_first_func = self.firstFunction.simplify()
+        simplified_second_func = self.secondFunction.simplify()
+
+        if are_numbers(simplified_first_func, simplified_second_func):
+            return RealNumberFunction(simplified_first_func.number * simplified_second_func.number)
+        if has_num(simplified_first_func, 0) or has_num(simplified_second_func, 0):
+            return RealNumberFunction(0)
+        if has_num(simplified_first_func, 1):
+            return simplified_second_func
+        if has_num(simplified_second_func, 1):
+            return simplified_first_func
+        return ProductFunction(simplified_first_func, simplified_second_func)
 
 
 class QuotientFunction(BaseFunction):
@@ -319,6 +401,20 @@ class QuotientFunction(BaseFunction):
             )
         )
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_first_func = self.firstFunction.simplify()
+        simplified_second_func = self.secondFunction.simplify()
+
+        if are_numbers(simplified_first_func, simplified_second_func):
+            return RealNumberFunction(simplified_first_func.number / simplified_second_func.number)
+        if has_num(simplified_second_func, 1):
+            return simplified_first_func
+
+        return QuotientFunction(simplified_first_func, simplified_second_func)
+
 
 class PowerFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -371,6 +467,21 @@ class PowerFunction(BaseFunction):
             self.firstFunction.analytical_derrivite()
         )
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_first_func = self.firstFunction.simplify()
+        simplified_second_func = self.secondFunction.simplify()
+
+        if are_numbers(simplified_first_func, simplified_second_func):
+            return RealNumberFunction(simplified_first_func.number ** simplified_second_func.number)
+        if has_num(simplified_second_func, 1):
+            return simplified_first_func
+        if has_num(simplified_second_func, 0):
+            return RealNumberFunction(1)
+        return PowerFunction(simplified_first_func, simplified_second_func)
+
 
 class SineFunction(BaseFunction):
     def __init__(self, fun):
@@ -409,6 +520,17 @@ class SineFunction(BaseFunction):
             ),
             self.function.analytical_derrivite()
         )
+
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_func = self.function.simplify()
+
+        if has_num(simplified_func, 0):
+            return RealNumberFunction(0)
+
+        return SineFunction(simplified_func)
 
 
 class CosineFunction(BaseFunction):
@@ -450,6 +572,17 @@ class CosineFunction(BaseFunction):
             self.function.analytical_derrivite()
         )
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+
+    def simplify(self):
+        simplified_func = self.function.simplify()
+
+        if has_num(simplified_func, 0):
+            return RealNumberFunction(1)
+
+        return CosineFunction(simplified_func)
+
 
 class ExponentFunction(BaseFunction):
     def __init__(self, fun):
@@ -487,6 +620,16 @@ class ExponentFunction(BaseFunction):
             self.function.analytical_derrivite()
         )
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+    def simplify(self):
+        simplified_func = self.function.simplify()
+
+        if has_num(simplified_func, 0):
+            return RealNumberFunction(1)
+        if is_log(simplified_func):
+            return simplified_func.function.copy()
+        return ExponentFunction(simplified_func)
 
 class NaturalLogFunction(BaseFunction):
     def __init__(self, fun):
@@ -527,6 +670,17 @@ class NaturalLogFunction(BaseFunction):
             self.function.analytical_derrivite()
         )
 
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+    
+    def simplify(self):
+        simplified_func = self.function.simplify()
+
+        if has_num(simplified_func, 1):
+            return RealNumberFunction(0)
+        return NaturalLogFunction(simplified_func)
+        
+
 
 class FactorialFunction(BaseFunction):
     def __init__(self, fun):
@@ -566,3 +720,35 @@ class FactorialFunction(BaseFunction):
         dot.edge(str(tempindex), str(index))
         index, dot = self.function.tograph(index, dot)
         return index, dot
+
+    def analytical_derrivite(self):
+        pass
+
+    def newton_derrivitive(self, x, h=0.001):
+        return (self.evaluate(x + h) - self.evaluate(x)) / h
+    def simplify(self):
+        return FactorialFunction(self.function.simplify())
+
+
+def are_numbers(first, second):
+    return is_number(first) and is_number(second)
+
+
+def is_number(func):
+    func_type = type(func)
+    return ((func_type is NaturalNumberFunction) or (func_type is RealNumberFunction))
+
+
+def is_variable(func):
+    return type(func) is VariableFunction
+
+
+def has_num(func, num):
+    if not is_number(func):
+        return False
+    return func.number == num
+
+def is_pi(func):
+    return isinstance(func, PiFunction)
+def is_log(func):
+    return isinstance(func, NaturalLogFunction)

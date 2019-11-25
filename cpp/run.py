@@ -29,18 +29,20 @@ class Window(QWidget):
 
 
 if __name__ == '__main__':
-    f = reader.read('/(s(*(p,x)),+(x,5))')
+    f = reader.read('/(s(*(x,p)),+(x,5))')
     print(f, f.evaluate(2.))
-    # f.creategraph()
     d = f.analytical_derrivite()
     print(d)
-    d.creategraph()
-
+    s = d.simplify()
+    print(s)
     x = np.arange(-5., 5., 0.01)
-    p = d.evaluate(x)
+
     y = f.evaluate(x)
-    plt.plot(x, y, 'r', x, p, 'b')
+    j = d.evaluate(x)
+    p = s.evaluate(x)
+
+    plt.plot(x, y, 'r', x, j, 'b')
     plt.show()
-    app = QApplication([])
-    w = Window()
-    sys.exit(app.exec_())
+    # app = QApplication([])
+    # w = Window()
+    # sys.exit(app.exec_())
