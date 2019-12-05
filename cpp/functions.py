@@ -805,7 +805,7 @@ class FactorialFunction(BaseFunction):
         return index, dot
 
     def analytical_derrivite(self):
-        pass
+        return RealNumberFunction(0)
 
     def newton_derrivitive(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
