@@ -778,10 +778,8 @@ class FactorialFunction(BaseFunction):
 
         temp = []
         for x in num:
-            if x >= 0 and x.is_integer():
-                temp.append(np.math.factorial(self.function.evaluate(int(x))))
-            else:
-                temp.append(np.nan)
+            temp.append(np.math.factorial(self.function.evaluate(int(x))))
+        
         return np.array(temp)
 
     def __str__(self):
@@ -845,3 +843,38 @@ def is_pi(func):
 
 def is_log(func):
     return isinstance(func, NaturalLogFunction)
+
+def taylor_analytical(function, n=8, a=0.):
+    if n == 0: return function
+
+    derrivitive = function.analytical_derrivite().simplify()
+    taylor_functions = [taylorify(derrivitive, 1,a)]
+    for i in range(n-1):
+        derrivitive = derrivitive.analytical_derrivite().simplify()
+        taylor_functions.append(taylorify(derrivitive, i+2,a))
+    
+    return SumFunction(RealNumberFunction(function.evaluate(a)), sum_all(taylor_functions))
+
+
+def sum_all(functions):
+    if len(functions) == 1:
+        return functions[0]
+    
+    return SumFunction(functions[0], sum_all(functions[1:]))
+
+def taylorify(function, n, a):
+    return ProductFunction(
+        QuotientFunction(
+            RealNumberFunction(function.evaluate(a)),
+            FactorialFunction(
+                NaturalNumberFunction(n)
+            )
+        ),
+        PowerFunction(
+            DifferenceFunction(
+                VariableFunction(),
+                RealNumberFunction(a)
+            ),
+            NaturalNumberFunction(n)
+        )
+    )
