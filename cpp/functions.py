@@ -40,6 +40,10 @@ class BaseFunction(ABC):
     def simplify(self):
         pass
 
+    @abstractmethod
+    def riemann_integral(self, x1, x2, interval=0.001):
+        pass
+
 
 class NaturalNumberFunction(BaseFunction):
     def __init__(self, num):
@@ -76,6 +80,12 @@ class NaturalNumberFunction(BaseFunction):
 
     def simplify(self):
         return self.copy()
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class RealNumberFunction(BaseFunction):
@@ -114,6 +124,12 @@ class RealNumberFunction(BaseFunction):
     def simplify(self):
         return self.copy()
 
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
+
 
 class PiFunction(BaseFunction):
     def toString(self):
@@ -148,6 +164,12 @@ class PiFunction(BaseFunction):
     def simplify(self):
         return self.copy()
 
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
+
 
 class VariableFunction(BaseFunction):
     def toString(self):
@@ -181,6 +203,12 @@ class VariableFunction(BaseFunction):
 
     def simplify(self):
         return self.copy()
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class SumFunction(BaseFunction):
@@ -234,6 +262,12 @@ class SumFunction(BaseFunction):
             return simplified_first_func
         return SumFunction(simplified_first_func, simplified_second_func)
 
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
+
 
 class DifferenceFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
@@ -283,8 +317,14 @@ class DifferenceFunction(BaseFunction):
 
         if are_numbers(simplified_first_func, simplified_second_func):
             return RealNumberFunction(simplified_first_func.number - simplified_second_func.number)
-        
+
         return DifferenceFunction(simplified_first_func, simplified_second_func)
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class ProductFunction(BaseFunction):
@@ -348,6 +388,12 @@ class ProductFunction(BaseFunction):
         if has_num(simplified_second_func, 1):
             return simplified_first_func
         return ProductFunction(simplified_first_func, simplified_second_func)
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class QuotientFunction(BaseFunction):
@@ -414,6 +460,12 @@ class QuotientFunction(BaseFunction):
             return simplified_first_func
 
         return QuotientFunction(simplified_first_func, simplified_second_func)
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class PowerFunction(BaseFunction):
@@ -482,6 +534,12 @@ class PowerFunction(BaseFunction):
             return RealNumberFunction(1)
         return PowerFunction(simplified_first_func, simplified_second_func)
 
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
+
 
 class SineFunction(BaseFunction):
     def __init__(self, fun):
@@ -531,6 +589,12 @@ class SineFunction(BaseFunction):
             return RealNumberFunction(0)
 
         return SineFunction(simplified_func)
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class CosineFunction(BaseFunction):
@@ -583,6 +647,12 @@ class CosineFunction(BaseFunction):
 
         return CosineFunction(simplified_func)
 
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
+
 
 class ExponentFunction(BaseFunction):
     def __init__(self, fun):
@@ -622,6 +692,7 @@ class ExponentFunction(BaseFunction):
 
     def newton_derrivitive(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
+
     def simplify(self):
         simplified_func = self.function.simplify()
 
@@ -630,6 +701,13 @@ class ExponentFunction(BaseFunction):
         if is_log(simplified_func):
             return simplified_func.function.copy()
         return ExponentFunction(simplified_func)
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
+
 
 class NaturalLogFunction(BaseFunction):
     def __init__(self, fun):
@@ -672,14 +750,19 @@ class NaturalLogFunction(BaseFunction):
 
     def newton_derrivitive(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
-    
+
     def simplify(self):
         simplified_func = self.function.simplify()
 
         if has_num(simplified_func, 1):
             return RealNumberFunction(0)
         return NaturalLogFunction(simplified_func)
-        
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 class FactorialFunction(BaseFunction):
@@ -726,8 +809,15 @@ class FactorialFunction(BaseFunction):
 
     def newton_derrivitive(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
+
     def simplify(self):
         return FactorialFunction(self.function.simplify())
+
+    def riemann_integral(self, x1, x2, interval=0.001):
+        x = np.arange(x1, x2, interval)
+        y = self.evaluate(x)
+        ans = np.sum(y) * interval
+        return x, y, ans
 
 
 def are_numbers(first, second):
@@ -748,7 +838,10 @@ def has_num(func, num):
         return False
     return func.number == num
 
+
 def is_pi(func):
     return isinstance(func, PiFunction)
+
+
 def is_log(func):
     return isinstance(func, NaturalLogFunction)
