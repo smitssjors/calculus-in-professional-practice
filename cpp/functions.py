@@ -5,7 +5,7 @@ import graphviz as gv
 
 class BaseFunction(ABC):
     @abstractmethod
-    def toString(self):
+    def to_string(self):
         return 'Base Class'
 
     @abstractmethod
@@ -14,26 +14,26 @@ class BaseFunction(ABC):
 
     @abstractmethod
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     @abstractmethod
     def copy(self):
         pass
 
     @abstractmethod
-    def creategraph(self):
+    def create_graph(self):
         pass
 
     @abstractmethod
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         pass
 
     @abstractmethod
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         pass
 
     @abstractmethod
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         pass
 
     @abstractmethod
@@ -49,33 +49,33 @@ class NaturalNumberFunction(BaseFunction):
     def __init__(self, num):
         self.number = np.int(num)
 
-    def toString(self):
+    def to_string(self):
         return f'{self.number}'
 
     def evaluate(self, num):
         return np.full_like(num, self.number)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return NaturalNumberFunction(self.number)
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         dot.node(str(index), str(self.number))
         index += 1
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return NaturalNumberFunction(0)
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -92,33 +92,33 @@ class RealNumberFunction(BaseFunction):
     def __init__(self, num):
         self.number = np.float(num)
 
-    def toString(self):
+    def to_string(self):
         return f'{self.number}'
 
     def evaluate(self, num):
         return np.full_like(num, self.number)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return RealNumberFunction(self.number)
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         dot.node(str(index), str(self.number))
         index += 1
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return RealNumberFunction(0)
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -132,33 +132,33 @@ class RealNumberFunction(BaseFunction):
 
 
 class PiFunction(BaseFunction):
-    def toString(self):
+    def to_string(self):
         return '\u03C0'
 
     def evaluate(self, num):
         return np.full_like(num, np.pi)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return PiFunction()
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         dot.node(str(index), '\u03C0')
         index += 1
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return RealNumberFunction(0)
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -172,33 +172,33 @@ class PiFunction(BaseFunction):
 
 
 class VariableFunction(BaseFunction):
-    def toString(self):
+    def to_string(self):
         return 'x'
 
     def evaluate(self, num):
         return num
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return VariableFunction()
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         dot.node(str(index), 'x')
         index += 1
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return NaturalNumberFunction(1)
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -216,38 +216,38 @@ class SumFunction(BaseFunction):
         self.firstFunction = firstFun
         self.secondFunction = secondFun
 
-    def toString(self):
-        return f'({self.firstFunction.toString()} + {self.secondFunction.toString()})'
+    def to_string(self):
+        return f'({self.firstFunction.to_string()} + {self.secondFunction.to_string()})'
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) + self.secondFunction.evaluate(num)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return SumFunction(self.firstFunction.copy(), self.secondFunction.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), '+')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.firstFunction.tograph(index, dot)
+        index, dot = self.firstFunction.to_graph(index, dot)
         dot.edge(str(tempindex), str(index))
-        index, dot = self.secondFunction.tograph(index, dot)
+        index, dot = self.secondFunction.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
-        return SumFunction(self.firstFunction.analytical_derrivite(), self.secondFunction.analytical_derrivite())
+    def analytical_derivative(self):
+        return SumFunction(self.firstFunction.analytical_derivative(), self.secondFunction.analytical_derivative())
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -274,41 +274,41 @@ class DifferenceFunction(BaseFunction):
         self.firstFunction = firstFun
         self.secondFunction = secondFun
 
-    def toString(self):
-        return f'({self.firstFunction.toString()} - {self.secondFunction.toString()})'
+    def to_string(self):
+        return f'({self.firstFunction.to_string()} - {self.secondFunction.to_string()})'
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) - self.secondFunction.evaluate(num)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return DifferenceFunction(self.firstFunction.copy(), self.secondFunction.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), '-')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.firstFunction.tograph(index, dot)
+        index, dot = self.firstFunction.to_graph(index, dot)
         dot.edge(str(tempindex), str(index))
-        index, dot = self.secondFunction.tograph(index, dot)
+        index, dot = self.secondFunction.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return DifferenceFunction(
-            self.firstFunction.analytical_derrivite(),
-            self.secondFunction.analytical_derrivite()
+            self.firstFunction.analytical_derivative(),
+            self.secondFunction.analytical_derivative()
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -332,47 +332,47 @@ class ProductFunction(BaseFunction):
         self.firstFunction = firstFun
         self.secondFunction = secondFun
 
-    def toString(self):
-        return f'({self.firstFunction.toString()} * {self.secondFunction.toString()})'
+    def to_string(self):
+        return f'({self.firstFunction.to_string()} * {self.secondFunction.to_string()})'
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) * self.secondFunction.evaluate(num)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return ProductFunction(self.firstFunction.copy(), self.secondFunction.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), '*')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.firstFunction.tograph(index, dot)
+        index, dot = self.firstFunction.to_graph(index, dot)
         dot.edge(str(tempindex), str(index))
-        index, dot = self.secondFunction.tograph(index, dot)
+        index, dot = self.secondFunction.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return SumFunction(
             ProductFunction(
-                self.firstFunction.analytical_derrivite(),
+                self.firstFunction.analytical_derivative(),
                 self.secondFunction.copy()
             ),
             ProductFunction(
                 self.firstFunction.copy(),
-                self.secondFunction.analytical_derrivite()
+                self.secondFunction.analytical_derivative()
             )
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -401,44 +401,44 @@ class QuotientFunction(BaseFunction):
         self.firstFunction = firstFun
         self.secondFunction = secondFun
 
-    def toString(self):
-        return f'({self.firstFunction.toString()} / {self.secondFunction.toString()})'
+    def to_string(self):
+        return f'({self.firstFunction.to_string()} / {self.secondFunction.to_string()})'
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) / self.secondFunction.evaluate(num)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return QuotientFunction(self.firstFunction.copy(), self.secondFunction.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), '/')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.firstFunction.tograph(index, dot)
+        index, dot = self.firstFunction.to_graph(index, dot)
         dot.edge(str(tempindex), str(index))
-        index, dot = self.secondFunction.tograph(index, dot)
+        index, dot = self.secondFunction.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return QuotientFunction(
             DifferenceFunction(
                 ProductFunction(
-                    self.firstFunction.analytical_derrivite(),
+                    self.firstFunction.analytical_derivative(),
                     self.secondFunction.copy()
                 ),
                 ProductFunction(
                     self.firstFunction.copy(),
-                    self.secondFunction.analytical_derrivite()
+                    self.secondFunction.analytical_derivative()
                 )
             ),
             PowerFunction(
@@ -447,7 +447,7 @@ class QuotientFunction(BaseFunction):
             )
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -476,35 +476,35 @@ class PowerFunction(BaseFunction):
             raise Exception('secondfunc must be a natural number')
         self.secondFunction = secondFun
 
-    def toString(self):
-        return f'({self.firstFunction.toString()} ^ {self.secondFunction.toString()})'
+    def to_string(self):
+        return f'({self.firstFunction.to_string()} ^ {self.secondFunction.to_string()})'
 
     def evaluate(self, num):
         return self.firstFunction.evaluate(num) ** self.secondFunction.evaluate(num)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return PowerFunction(self.firstFunction.copy(), self.secondFunction.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), '^')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.firstFunction.tograph(index, dot)
+        index, dot = self.firstFunction.to_graph(index, dot)
         dot.edge(str(tempindex), str(index))
-        index, dot = self.secondFunction.tograph(index, dot)
+        index, dot = self.secondFunction.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return ProductFunction(
             ProductFunction(
                 self.secondFunction.copy(),
@@ -516,10 +516,10 @@ class PowerFunction(BaseFunction):
                     )
                 )
             ),
-            self.firstFunction.analytical_derrivite()
+            self.firstFunction.analytical_derivative()
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -545,41 +545,41 @@ class SineFunction(BaseFunction):
     def __init__(self, fun):
         self.function = fun
 
-    def toString(self):
-        return f'sin({self.function.toString()})'
+    def to_string(self):
+        return f'sin({self.function.to_string()})'
 
     def evaluate(self, num):
         return np.sin(self.function.evaluate(num))
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return SineFunction(self.function.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), 'sin')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.function.tograph(index, dot)
+        index, dot = self.function.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return ProductFunction(
             CosineFunction(
                 self.function.copy()
             ),
-            self.function.analytical_derrivite()
+            self.function.analytical_derivative()
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -601,42 +601,42 @@ class CosineFunction(BaseFunction):
     def __init__(self, fun):
         self.function = fun
 
-    def toString(self):
-        return f'cos({self.function.toString()})'
+    def to_string(self):
+        return f'cos({self.function.to_string()})'
 
     def evaluate(self, num):
         return np.cos(self.function.evaluate(num))
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return CosineFunction(self.function.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), 'cos')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.function.tograph(index, dot)
+        index, dot = self.function.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return ProductFunction(
             DifferenceFunction(
                 NaturalNumberFunction(0),
                 SineFunction(self.function.copy())
             ),
-            self.function.analytical_derrivite()
+            self.function.analytical_derivative()
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -658,39 +658,39 @@ class ExponentFunction(BaseFunction):
     def __init__(self, fun):
         self.function = fun
 
-    def toString(self):
-        return f'(e ^ {self.function.toString()})'
+    def to_string(self):
+        return f'(e ^ {self.function.to_string()})'
 
     def evaluate(self, num):
         return np.exp(self.function.evaluate(num))
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return ExponentFunction(self.function.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), 'e^')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.function.tograph(index, dot)
+        index, dot = self.function.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return ProductFunction(
             self.copy(),
-            self.function.analytical_derrivite()
+            self.function.analytical_derivative()
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -713,42 +713,42 @@ class NaturalLogFunction(BaseFunction):
     def __init__(self, fun):
         self.function = fun
 
-    def toString(self):
-        return f'ln({self.function.toString()})'
+    def to_string(self):
+        return f'ln({self.function.to_string()})'
 
     def evaluate(self, num):
         return np.log(self.function.evaluate(num))
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return NaturalLogFunction(self.function.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), 'ln')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.function.tograph(index, dot)
+        index, dot = self.function.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return ProductFunction(
             QuotientFunction(
                 NaturalNumberFunction(1),
                 self.function.copy()
             ),
-            self.function.analytical_derrivite()
+            self.function.analytical_derivative()
         )
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -769,8 +769,8 @@ class FactorialFunction(BaseFunction):
     def __init__(self, fun):
         self.function = fun
 
-    def toString(self):
-        return f'{self.function.toString()}!'
+    def to_string(self):
+        return f'{self.function.to_string()}!'
 
     def evaluate(self, num):
         if isinstance(num, int) or isinstance(num, float):
@@ -779,33 +779,33 @@ class FactorialFunction(BaseFunction):
         temp = []
         for x in num:
             temp.append(np.math.factorial(self.function.evaluate(int(x))))
-        
+
         return np.array(temp)
 
     def __str__(self):
-        return self.toString()
+        return self.to_string()
 
     def copy(self):
         return FactorialFunction(self.function.copy())
 
-    def creategraph(self):
+    def create_graph(self):
         dot = gv.Graph(name='calc')
-        index, dot = self.tograph(1, dot)
+        index, dot = self.to_graph(1, dot)
         dot.render('calc.dot')
         return 'graph.png'
 
-    def tograph(self, index, dot):
+    def to_graph(self, index, dot):
         tempindex = index
         dot.node(str(index), '!')
         index += 1
         dot.edge(str(tempindex), str(index))
-        index, dot = self.function.tograph(index, dot)
+        index, dot = self.function.to_graph(index, dot)
         return index, dot
 
-    def analytical_derrivite(self):
+    def analytical_derivative(self):
         return RealNumberFunction(0)
 
-    def newton_derrivitive(self, x, h=0.001):
+    def newton_derivative(self, x, h=0.001):
         return (self.evaluate(x + h) - self.evaluate(x)) / h
 
     def simplify(self):
@@ -824,7 +824,7 @@ def are_numbers(first, second):
 
 def is_number(func):
     func_type = type(func)
-    return ((func_type is NaturalNumberFunction) or (func_type is RealNumberFunction))
+    return (func_type is NaturalNumberFunction) or (func_type is RealNumberFunction)
 
 
 def is_variable(func):
@@ -844,23 +844,26 @@ def is_pi(func):
 def is_log(func):
     return isinstance(func, NaturalLogFunction)
 
-def taylor_analytical(function, n=8, a=0.):
-    if n == 0: return function
 
-    derrivitive = function.analytical_derrivite().simplify()
-    taylor_functions = [taylorify(derrivitive, 1,a)]
-    for i in range(n-1):
-        derrivitive = derrivitive.analytical_derrivite().simplify()
-        taylor_functions.append(taylorify(derrivitive, i+2,a))
-    
-    return SumFunction(RealNumberFunction(function.evaluate(a)), sum_all(taylor_functions))
+def taylor_analytical(function, n=8, a=0.):
+    if n == 0:
+        return function
+
+    derivative = function.analytical_derivative().simplify()
+    taylor_functions = [taylorify(derivative, 1, a)]
+    for i in range(n - 1):
+        derivative = derivative.analytical_derivative().simplify()
+        taylor_functions.append(taylorify(derivative, i + 2, a))
+
+    return SumFunction(RealNumberFunction(function.evaluate(a)), sum_all(taylor_functions)).simplify()
 
 
 def sum_all(functions):
     if len(functions) == 1:
         return functions[0]
-    
+
     return SumFunction(functions[0], sum_all(functions[1:]))
+
 
 def taylorify(function, n, a):
     return ProductFunction(

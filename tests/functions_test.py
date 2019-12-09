@@ -6,12 +6,12 @@ class TestNaturalNumberFunction:
     def test_toStringInt(self):
         num = 5
         n = NaturalNumberFunction(num)
-        assert n.toString() == str(num)
+        assert n.to_string() == str(num)
 
     def test_toStringFloat(self):
         num = 5.76
         n = NaturalNumberFunction(num)
-        assert n.toString() == str(int(num))
+        assert n.to_string() == str(int(num))
 
     def test_evaluateInt(self):
         num = 4
@@ -28,12 +28,12 @@ class TestRealNumberFunction:
     def test_toStringFloat(self):
         num = 3.67
         n = RealNumberFunction(num)
-        assert n.toString() == str(num)
+        assert n.to_string() == str(num)
 
     def test_toStringInt(self):
         num = 3
         n = RealNumberFunction(num)
-        assert n.toString() == str(float(num))
+        assert n.to_string() == str(float(num))
 
     def test_evaluateFloat(self):
         num = 4.54
@@ -49,7 +49,7 @@ class TestRealNumberFunction:
 class TestPiFunction:
     def test_toString(self):
         n = PiFunction()
-        assert n.toString() == '\u03C0'
+        assert n.to_string() == '\u03C0'
 
     def test_evaluate(self):
         n = PiFunction()
@@ -59,7 +59,7 @@ class TestPiFunction:
 class TestVariableFunction:
     def test_toString(self):
         n = VariableFunction()
-        assert n.toString() == 'x'
+        assert n.to_string() == 'x'
 
     def test_evaluateInt(self):
         num = 4
@@ -77,7 +77,7 @@ class TestSumFunction:
         one = NaturalNumberFunction(1)
         two = NaturalNumberFunction(2)
         n = SumFunction(one, two)
-        assert n.toString() == '(1 + 2)'
+        assert n.to_string() == '(1 + 2)'
 
     def test_evaluate(self):
         one = NaturalNumberFunction(1)
@@ -91,7 +91,7 @@ class TestDifferenceFunction:
         one = NaturalNumberFunction(1)
         two = NaturalNumberFunction(2)
         n = DifferenceFunction(one, two)
-        assert n.toString() == '(1 - 2)'
+        assert n.to_string() == '(1 - 2)'
 
     def test_evaluate(self):
         one = NaturalNumberFunction(1)
@@ -105,7 +105,7 @@ class TestProductFunction:
         one = NaturalNumberFunction(1)
         two = NaturalNumberFunction(2)
         n = ProductFunction(one, two)
-        assert n.toString() == '(1 * 2)'
+        assert n.to_string() == '(1 * 2)'
 
     def test_evaluate(self):
         one = NaturalNumberFunction(1)
@@ -119,7 +119,7 @@ class TestQuotientFunction:
         one = NaturalNumberFunction(1)
         two = NaturalNumberFunction(2)
         n = QuotientFunction(one, two)
-        assert n.toString() == '(1 / 2)'
+        assert n.to_string() == '(1 / 2)'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
@@ -133,7 +133,7 @@ class TestPowerFunction:
         one = NaturalNumberFunction(1)
         two = NaturalNumberFunction(2)
         n = PowerFunction(one, two)
-        assert n.toString() == '(1 ^ 2)'
+        assert n.to_string() == '(1 ^ 2)'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
@@ -146,7 +146,7 @@ class TestSineFunction:
     def test_toString(self):
         one = NaturalNumberFunction(1)
         n = SineFunction(one)
-        assert n.toString() == 'sin(1)'
+        assert n.to_string() == 'sin(1)'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
@@ -158,7 +158,7 @@ class TestCosineFunction:
     def test_toString(self):
         one = NaturalNumberFunction(1)
         n = CosineFunction(one)
-        assert n.toString() == 'cos(1)'
+        assert n.to_string() == 'cos(1)'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
@@ -170,7 +170,7 @@ class TestExponentFunction:
     def test_toString(self):
         one = NaturalNumberFunction(1)
         n = ExponentFunction(one)
-        assert n.toString() == '(e ^ 1)'
+        assert n.to_string() == '(e ^ 1)'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
@@ -182,7 +182,7 @@ class TestNaturalLogFunction:
     def test_toString(self):
         one = NaturalNumberFunction(1)
         n = NaturalLogFunction(one)
-        assert n.toString() == 'ln(1)'
+        assert n.to_string() == 'ln(1)'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
@@ -194,7 +194,7 @@ class TestFactorialFunction:
     def test_toString(self):
         one = NaturalNumberFunction(1)
         n = FactorialFunction(one)
-        assert n.toString() == '1!'
+        assert n.to_string() == '1!'
 
     def test_evaluate(self):
         one = RealNumberFunction(1)
