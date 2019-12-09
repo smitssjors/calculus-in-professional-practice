@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QMessageBox, QLineEdit, QApplication, QGridLayout, \
-    QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QPushButton, QLineEdit, QApplication, QVBoxLayout, QHBoxLayout
 import numpy as np
 import sys
 from matplotlib.figure import Figure
