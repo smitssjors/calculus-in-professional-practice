@@ -33,6 +33,9 @@ class Window(QWidget):
         rib = QPushButton('Riemann Integral')
         rib.clicked.connect(self.plot_riemann_integral)
 
+        mcl = QPushButton('McLaurin series')
+        mcl.clicked.connect(self.plot_mclaurin_series)
+
         left_vbox = QVBoxLayout()
         left_vbox.addWidget(self.le)
         left_vbox.addWidget(plt)
@@ -40,6 +43,7 @@ class Window(QWidget):
         left_vbox.addWidget(ndb)
         left_vbox.addLayout(sub_hbox)
         left_vbox.addWidget(rib)
+        left_vbox.addWidget(mcl)
 
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -88,12 +92,6 @@ class Window(QWidget):
         y = self.f.evaluate(self.x)
         self.plot(y, 'r', clear=True)
 
-        for i in range(8):
-            taylor = functions.taylor_analytical(self.f, i + 1)
-            print(taylor)
-            y = taylor.evaluate(self.x)
-            self.plot(y, 'k')
-
     def plot_analytical_derivative(self):
         d = self.f.analytical_derivative()
         print(d)
@@ -112,6 +110,15 @@ class Window(QWidget):
         ix, iy, ans = self.f.riemann_integral(x1, x2, 0.01)
         self.plotline(ix, iy, 'm')
         print(ans)
+
+    def plot_mclaurin_series(self):
+        color = 1.
+        for i in range(8):
+            taylor = functions.taylor_analytical(self.f, i + 1)
+            print(taylor)
+            y = taylor.evaluate(self.x)
+            color -= 0.1
+            self.plot(y, f'{color}')
 
 
 if __name__ == '__main__':
