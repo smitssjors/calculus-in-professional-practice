@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-import numpy as np
+
 import graphviz as gv
+import numpy as np
 
 
 class BaseFunction(ABC):
@@ -471,9 +472,6 @@ class QuotientFunction(BaseFunction):
 class PowerFunction(BaseFunction):
     def __init__(self, firstFun, secondFun):
         self.firstFunction = firstFun
-
-        if not isinstance(secondFun, NaturalNumberFunction):
-            raise Exception('secondfunc must be a natural number')
         self.secondFunction = secondFun
 
     def to_string(self):

@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import QWidget, QPushButton, QLineEdit, QApplication, QVBoxLayout, QHBoxLayout
-import numpy as np
 import sys
+
+import numpy as np
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, \
+    NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+
 from cpp import functions, reader
 
 
