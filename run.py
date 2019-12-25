@@ -35,8 +35,11 @@ class Window(QWidget):
         rib = QPushButton('Riemann Integral')
         rib.clicked.connect(self.plot_riemann_integral)
 
-        mcl = QPushButton('McLaurin series')
-        mcl.clicked.connect(self.plot_mclaurin_series)
+        mcla = QPushButton('McLaurin series analytical')
+        mcla.clicked.connect(self.plot_mclaurin_series_analytical)
+
+        mcln = QPushButton('McLaurin series newton')
+        mcln.clicked.connect(self.plot_mclaurin_series_newton)
 
         left_vbox = QVBoxLayout()
         left_vbox.addWidget(self.le)
@@ -45,7 +48,8 @@ class Window(QWidget):
         left_vbox.addWidget(ndb)
         left_vbox.addLayout(sub_hbox)
         left_vbox.addWidget(rib)
-        left_vbox.addWidget(mcl)
+        left_vbox.addWidget(mcla)
+        left_vbox.addWidget(mcln)
 
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -113,14 +117,21 @@ class Window(QWidget):
         self.plotline(ix, iy, 'm')
         print(ans)
 
-    def plot_mclaurin_series(self):
+    def plot_mclaurin_series_analytical(self):
         color = 1.
         for i in range(8):
             taylor = functions.taylor_analytical(self.f, i + 1)
             print(taylor)
             y = taylor.evaluate(self.x)
             color -= 0.1
-            self.plot(y, f'{color}')
+            self.plot(y, str(color))
+
+    def plot_mclaurin_series_newton(self):
+        color = 1.
+        for i in range(8):
+            taylor_y = functions.taylor_newton(self.f, self.x, i + 1)
+            color -= 0.1
+            self.plot(taylor_y, str(color))
 
 
 if __name__ == '__main__':

@@ -856,6 +856,19 @@ def taylor_analytical(function, n=8, a=0.):
     return SumFunction(RealNumberFunction(function.evaluate(a)), sum_all(taylor_functions)).simplify()
 
 
+def taylor_newton(function, x, n=8, a=0):
+    a = float(a)
+    taylor_functions = [taylorify(RealNumberFunction(function.newton_derivative(a)), 1, a)]
+    derivative = function.analytical_derivative().simplify()
+    for i in range(2, n + 1):
+        taylor_functions.append(taylorify(RealNumberFunction(derivative.newton_derivative(a)), i, a))
+        derivative = derivative.analytical_derivative().simplify()
+
+    s = SumFunction(RealNumberFunction(function.evaluate(a)), sum_all(taylor_functions)).simplify()
+    print(s)
+    return s.evaluate(x)
+
+
 def sum_all(functions):
     if len(functions) == 1:
         return functions[0]
@@ -879,3 +892,9 @@ def taylorify(function, n, a):
             NaturalNumberFunction(n)
         )
     )
+
+
+if __name__ == '__main__':
+    sin = SineFunction(VariableFunction())
+    print(taylor_analytical(sin))
+    taylor_newton(sin, np.arange(-5, 5, 0.01))
