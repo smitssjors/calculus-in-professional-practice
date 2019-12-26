@@ -141,6 +141,7 @@ class Window(QWidget):
 
     def plot_gauss(self):
         func = gaussian.from_string(self.gauss_coords.text())
+        print(func)
         y = func.evaluate(self.x)
         self.plot(y, 'y')
 
