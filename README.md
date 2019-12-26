@@ -28,4 +28,10 @@ cd calculus-in-professional-practice
 pip install -r requirements.txt
 python run.py
 ```
+Nadat je klaar ben bent
+```
+conda activate // Gaat trug naar de root environment
+conda remove --name sjors_demo --all
+```
+
 https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
