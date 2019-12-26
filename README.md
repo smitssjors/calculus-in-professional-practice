@@ -19,3 +19,13 @@ python -m venv .venv
 pip install -r requirements.txt
 python run.py
 ```
+## Conda
+```
+conda create -n sjors_demo python=3.7.5
+conda activate sjors_demo
+git clone https://github.com/smitssjors/calculus-in-professional-practice.git
+cd calculus-in-professional-practice
+pip install -r requirements.txt
+python run.py
+```
+https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
