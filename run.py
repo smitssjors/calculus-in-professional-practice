@@ -6,7 +6,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
     NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from cpp import functions, reader
+from cpp import functions, reader, gaussian
 
 
 class Window(QWidget):
@@ -41,6 +41,10 @@ class Window(QWidget):
         mcln = QPushButton('McLaurin series newton')
         mcln.clicked.connect(self.plot_mclaurin_series_newton)
 
+        self.gauss_coords = QLineEdit('-3,-1;-2,0;-1,-1;0,2')
+        gauss = QPushButton('Gaussian')
+        gauss.clicked.connect(self.plot_gauss)
+
         left_vbox = QVBoxLayout()
         left_vbox.addWidget(self.le)
         left_vbox.addWidget(plt)
@@ -50,6 +54,8 @@ class Window(QWidget):
         left_vbox.addWidget(rib)
         left_vbox.addWidget(mcla)
         left_vbox.addWidget(mcln)
+        left_vbox.addWidget(self.gauss_coords)
+        left_vbox.addWidget(gauss)
 
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -132,6 +138,11 @@ class Window(QWidget):
             taylor_y = functions.taylor_newton(self.f, self.x, i + 1)
             color -= 0.1
             self.plot(taylor_y, str(color))
+
+    def plot_gauss(self):
+        func = gaussian.from_string(self.gauss_coords.text())
+        y = func.evaluate(self.x)
+        self.plot(y, 'y')
 
 
 if __name__ == '__main__':
