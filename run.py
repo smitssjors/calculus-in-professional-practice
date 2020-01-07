@@ -101,6 +101,7 @@ class Window(QWidget):
     def plotmain(self):
         self.f = reader.read(self.le.text())
         print(self.f)
+        self.f.create_graph()
         y = self.f.evaluate(self.x)
         self.plot(y, 'r', clear=True)
 
