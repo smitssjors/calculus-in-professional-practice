@@ -13,8 +13,8 @@ from cpp import functions, gaussian, reader
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        self.bound = 0.1
-        self.step = 0.0001
+        self.bound = 10.
+        self.step = 0.01
         self.x = np.arange(-self.bound, self.bound, self.step)
         self.f = None
         self.setupUI()
@@ -26,7 +26,7 @@ class Window(QWidget):
         sld.setMaximum(100)
         sld.setValue(100)
         sld.valueChanged.connect(self.change_zoom)
-        self.sldlbl = QLabel('0.1')
+        self.sldlbl = QLabel('10')
         self.sldlbl.setFixedHeight(10)
         plt = QPushButton('Plot')
         plt.clicked.connect(self.plotmain)
