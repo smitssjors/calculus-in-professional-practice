@@ -1,23 +1,33 @@
 import sys
 
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QLineEdit, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QLabel, QLineEdit, QPushButton, QSlider, QVBoxLayout, QWidget
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, \
     NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from cpp import functions, reader, gaussian
+from cpp import functions, gaussian, reader
 
 
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        self.x = np.arange(-5., 5., 0.01)
+        self.bound = 0.1
+        self.step = 0.0001
+        self.x = np.arange(-self.bound, self.bound, self.step)
         self.f = None
         self.setupUI()
 
     def setupUI(self):
         self.le = QLineEdit('s(x)')
+        sld = QSlider(Qt.Horizontal)
+        sld.setMinimum(1)
+        sld.setMaximum(100)
+        sld.setValue(100)
+        sld.valueChanged.connect(self.change_zoom)
+        self.sldlbl = QLabel('0.1')
+        self.sldlbl.setFixedHeight(10)
         plt = QPushButton('Plot')
         plt.clicked.connect(self.plotmain)
 
@@ -47,6 +57,8 @@ class Window(QWidget):
 
         left_vbox = QVBoxLayout()
         left_vbox.addWidget(self.le)
+        left_vbox.addWidget(sld)
+        left_vbox.addWidget(self.sldlbl)
         left_vbox.addWidget(plt)
         left_vbox.addWidget(adb)
         left_vbox.addWidget(ndb)
@@ -71,9 +83,14 @@ class Window(QWidget):
         hbox.addLayout(right_vbox)
 
         self.setLayout(hbox)
-        # self.setGeometry(300, 300, 350, 300)
         self.setWindowTitle('Calculus in Professional Practice')
         self.show()
+
+    def change_zoom(self, value):
+        self.bound = value / 10
+        self.step = value / 10000
+        self.sldlbl.setText(str(self.bound))
+        self.x = np.arange(-self.bound, self.bound, self.step)
 
     def plot(self, y, color, clear=False):
         ax = self.figure.add_subplot(111)
@@ -83,6 +100,7 @@ class Window(QWidget):
         ax.grid(True, which='both')
         ax.axvline(x=0, color='k')
         ax.axhline(y=0, color='k')
+        ax.set_ylim([-self.bound, self.bound])
         self.canvas.draw()
 
     def plotline(self, x, y, color, clear=False):
@@ -97,6 +115,14 @@ class Window(QWidget):
         ax.axvline(x=0, color='k')
         ax.axhline(y=0, color='k')
         self.canvas.draw()
+
+    def clear(self):
+        ax = self.figure.add_subplot(111)
+        ax.clear()
+
+    def plot_f(self):
+        y = self.f.evaluate(self.x)
+        self.plot(y, 'r')
 
     def plotmain(self):
         self.f = reader.read(self.le.text())
@@ -125,6 +151,7 @@ class Window(QWidget):
         print(ans)
 
     def plot_mclaurin_series_analytical(self):
+        self.clear()
         color = 1.
         for i in range(8):
             taylor = functions.taylor_analytical(self.f, i + 1)
@@ -132,13 +159,16 @@ class Window(QWidget):
             y = taylor.evaluate(self.x)
             color -= 0.1
             self.plot(y, str(color))
+        self.plot_f()
 
     def plot_mclaurin_series_newton(self):
+        self.clear()
         color = 1.
         for i in range(8):
             taylor_y = functions.taylor_newton(self.f, self.x, i + 1)
             color -= 0.1
             self.plot(taylor_y, str(color))
+        self.plot_f()
 
     def plot_gauss(self):
         func = gaussian.from_string(self.gauss_coords.text())
